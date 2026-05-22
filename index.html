@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>E-Admin LPIS</title>
+<link href="[https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap)" rel="stylesheet">
+<script src="[https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js](https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js)"></script>
+<script src="[https://unpkg.com/lucide@latest](https://unpkg.com/lucide@latest)"></script>
+<script src="[https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js](https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js)"></script>
+
+<!-- Memanggil file CSS eksternal -->
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="mesh"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+
+<div id="draftIndicator" class="draft-indicator">
+  <i data-lucide="save" class="lucide-sm"></i> Disimpan otomatis pada <span id="draftTime"></span>
+</div>
+
+<div id="tsts"></div>
+
+<div id="printAreaWrapper">
+  <div id="printArea">
+    <div class="p-header">
+      <img class="p-logo" src="[https://i.ibb.co.com/4RFTZF8Z/20260501-125037-0000.png](https://i.ibb.co.com/4RFTZF8Z/20260501-125037-0000.png)" alt="Logo LPI">
+      <div class="p-title-box"><div class="p-title">LEMBAR DISPOSISI SURAT</div></div>
+      <div id="printQrBox" class="p-qr"></div>
+    </div>
+    <div class="p-status-row"><div>Rahasia <span class="p-ch"></span></div><div>Penting <span class="p-ch"></span></div><div>Amat Segera <span class="p-ch"></span></div></div>
+    <div class="p-agenda-row"><div>Tanggal Terima : <span id="pr_tgl_t">...</span></div><div>No. Agenda : ..................................</div></div>
+    <div class="p-info-box">
+      <table class="p-info-table">
+        <tr><td>Pengirim</td><td>: <span id="pr_fr"></span></td></tr>
+        <tr><td>Nomor surat</td><td>: <span id="pr_no"></span></td></tr>
+        <tr><td>Tanggal surat</td><td>: <span id="pr_tgl_s"></span></td></tr>
+        <tr><td>Perihal</td><td>: <span id="pr_hl"></span></td></tr>
+      </table>
+    </div>
+    <div class="p-disp-grid">
+      <div><div class="p-disp-col-title">Disposisi Dari</div><div class="p-disp-dari"><strong>Direktur LPIS</strong></div></div>
+      <div>
+        <div class="p-disp-col-title">Disposisi Kepada</div>
+        <table class="p-disp-to-table" id="pr_to_table">
+          <tr><td>Sekretaris Direktur</td><td data-role="Sekretaris Direktur"></td></tr>
+          <tr><td>Plt Asdir I, Kesiswaan, Humas, PPDB</td><td data-role="Plt Asdir I, Kesiswaan, Humas, PPDB"></td></tr>
+          <tr><td>Kabag Kurikulum LPIS</td><td data-role="Kabag Kurikulum LPIS"></td></tr>
+          <tr><td>Kapus. SEP LPIS</td><td data-role="Kapus. SEP LPIS"></td></tr>
+          <tr><td>Kapus. SMI LPIS</td><td data-role="Kapus. SMI LPIS"></td></tr>
+          <tr><td>Kapus. Bisnis</td><td data-role="Kapus. Bisnis"></td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="p-isi-title">Isi Disposisi</div>
+    <table class="p-isi-table">
+      <tr><td>Diproses/ditindaklanjuti</td><td class="p-isi-cb">V</td><td>Dipertimbangkan</td><td class="p-isi-cb"></td></tr>
+      <tr><td>Disiapkan jawaban</td><td class="p-isi-cb"></td><td>Diketahui/monitor</td><td class="p-isi-cb"></td></tr>
+      <tr><td>Dibuatkan surat penugasan/izin</td><td class="p-isi-cb"></td><td>Dicatat/dipersiapkan</td><td class="p-isi-cb"></td></tr>
+      <tr><td>Tanda terima dikirim</td><td class="p-isi-cb"></td><td>Digandakan/difotokopi</td><td class="p-isi-cb"></td></tr>
+      <tr><td>Harap kami diberi pertimbangan</td><td class="p-isi-cb"></td><td>Bahan diedarkan kepada</td><td class="p-isi-cb"></td></tr>
+    </table>
+    <div class="p-catatan-title">Catatan</div>
+    <div class="p-catatan-box" id="pr_ct"></div>
+    <div id="printHistory" style="margin-top: 15px; font-size: 9pt; text-align: right; font-style: italic; color: #333;"></div>
+  </div>
+</div>
+
+<div id="printRekapArea"></div>
+
+<div id="loginScreen">
+  <div class="login-left">
+    <div class="log-box">
+      <div class="log-head">
+        <img src="[https://i.ibb.co.com/4RFTZF8Z/20260501-125037-0000.png](https://i.ibb.co.com/4RFTZF8Z/20260501-125037-0000.png)" alt="Logo LPI" class="log-img-sm">
+        <div class="log-t-wrap">
+          <div class="log-t">E-Admin LPIS</div>
+          <div class="log-s">Sistem Administrasi Terpadu</div>
+        </div>
+      </div>
+      
+      <div class="login-greeting">
+        <h2 style="margin:0 0 8px 0; font-family:var(--fd); font-size:28px; font-weight:800; letter-spacing:-1px; color:var(--tp);">Selamat Datang! 👋</h2>
+        <p style="margin:0; font-size:15px; color:var(--ts); line-height:1.6; font-weight:500;">Silakan masukkan kredensial Anda untuk melanjutkan ke dashboard.</p>
+      </div>
+
+      <div class="float-group">
+        <input type="text" class="float-input" id="lg_u" placeholder=" " onkeypress="if(event.key==='Enter') document.getElementById('lg_p').focus()">
+        <label class="float-label">Username</label>
+      </div>
+      <div class="float-group">
+        <input type="password" class="float-input" id="lg_p" placeholder=" " onkeypress="if(event.key==='Enter') window.doLogin()" style="padding-right:48px;">
+        <label class="float-label">Password</label>
+        <div class="pwd-toggle" onclick="togglePwd()">
+          <i data-lucide="eye" id="togglePasswordIcon" class="lucide-sm"></i>
+        </div>
+      </div>
+      <button class="btn bp2 login-btn" onclick="window.doLogin()">
+        <span>Masuk Sistem</span>
+        <i data-lucide="arrow-right" class="lucide-sm"></i>
+      </button>
+    </div>
+  </div>
+  <div class="login-right">
+    <div class="mesh-login">
+       <div class="blob-login b1"></div>
+       <div class="blob-login b2"></div>
+       <div class="blob-login b3"></div>
+    </div>
+    <img src="[https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Locked%20with%20key/3D/locked_with_key_3d.png](https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Locked%20with%20key/3D/locked_with_key_3d.png)" alt="Secure Login" class="img-3d-float">
+    <div class="login-right-text">
+       <h3>Aman & Terpusat</h3>
+       <p>Kelola seluruh dokumen administrasi dan persuratan satuan pendidikan dalam satu ekosistem yang canggih.</p>
+    </div>
+  </div>
+</div>
+
+<div id="loadingOverlay">
+  <div class="spinner"></div>
+  <div style="font-family:var(--fb); font-weight:700; letter-spacing:1px; font-size:15px;" id="loadingText">Memproses Data...</div>
+  <div class="progress-wrap" id="loadProgWrap"><div class="progress-bar" id="loadProgBar"></div></div>
+</div>
+
+<div class="ov" id="modOmniSearch" style="align-items: flex-start; padding-top: 10vh;">
+  <div class="mb" style="max-width: 600px; overflow: visible;">
+    <div style="padding: 16px 20px; border-bottom: 1px solid var(--gb); display:flex; align-items:center; gap:12px;">
+      <i data-lucide="search" style="color:var(--tm)"></i>
+      <input type="text" id="omniInput" placeholder="Cari apapun di sini... (Coba ketik nomor atau perihal)" style="width:100%; border:none; outline:none; font-size:16px; font-family:var(--fb); background:transparent; color:var(--tp);" oninput="runOmniSearch(this.value)">
+      <div class="bdg b-time" style="cursor:pointer" onclick="closeModal('modOmniSearch')">ESC</div>
+    </div>
+    <div id="omniResults" class="custom-scroll" style="max-height: 400px; overflow-y:auto; padding: 12px;">
+      <div style="padding:20px; text-align:center; color:var(--tm); font-size:13px;">Ketik kata kunci untuk mulai mencari...</div>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="modDelete">
+  <div class="mb" style="max-width:340px; text-align:center; border: 1px solid var(--er); box-shadow: 0 12px 40px rgba(239, 68, 68, 0.15);">
+    <div class="mhd" style="border-bottom:none; padding-bottom:0; background:transparent;"><div class="mtl" style="color:var(--er) !important; justify-content:center; width:100%;"><i data-lucide="alert-triangle"></i> Konfirmasi Hapus</div></div>
+    <div class="mbd" style="padding-bottom:20px;">
+      <div style="font-size:14px; color:var(--ts); margin-bottom:20px; line-height:1.5;">Apakah Anda yakin ingin menghapus data ini secara permanen? Aksi ini tidak dapat dibatalkan.</div>
+      <div class="fac" style="justify-content:center; gap:12px; background:transparent; border-top:none; margin:0; padding:0;">
+        <button class="btn bg2 bsm" onclick="closeModal('modDelete')">Batal</button>
+        <button class="btn bd2 bsm" onclick="executeDelete()">Ya, Hapus Data</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="modLogout">
+  <div class="mb" style="max-width:340px; text-align:center; border: 1px solid var(--gb); box-shadow: var(--shh);">
+    <div class="mhd" style="border-bottom:none; padding-bottom:0; background:transparent;"><div class="mtl" style="justify-content:center; width:100%;"><i data-lucide="log-out" style="color:var(--a1)"></i> Konfirmasi Keluar</div></div>
+    <div class="mbd" style="padding-bottom:20px;">
+      <div style="font-size:14px; color:var(--ts); margin-bottom:20px; line-height:1.5;">Apakah Anda yakin ingin keluar dari sistem E-Admin LPIS? Sesi Anda akan diakhiri.</div>
+      <div class="fac" style="justify-content:center; gap:12px; background:transparent; border-top:none; margin:0; padding:0;">
+        <button class="btn bg2 bsm" onclick="closeModal('modLogout')">Batal</button>
+        <button class="btn bp2 bsm" onclick="executeLogout()">Ya, Keluar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="modBidang">
+  <div class="mb" style="max-width:380px;">
+    <div class="mhd">
+      <div class="mtl" id="modBdgT"><i data-lucide="folder-plus"></i> Tambah Bidang</div>
+      <div class="mcl" onclick="closeModal('modBidang')"><i data-lucide="x"></i></div>
+    </div>
+    <div class="mbd" style="padding-bottom:24px;">
+      <div style="font-size:13px; color:var(--ts); margin-bottom:20px;">Masukkan kode angka dan nama bidang untuk digunakan pada penomoran Surat Keluar.</div>
+      <div class="fg">
+        <label class="fl">Kode Angka *</label>
+        <input type="number" class="fc" id="bdg_code" placeholder="Contoh: 01" min="1" max="99">
+      </div>
+      <div class="fg">
+        <label class="fl">Nama Bidang *</label>
+        <input type="text" class="fc" id="bdg_name" placeholder="Contoh: Kesiswaan">
+      </div>
+      <div style="display:flex; gap:16px; margin-top:32px;">
+        <button class="btn bg2" onclick="closeModal('modBidang')" style="flex:1">Batal</button>
+        <button class="btn bp2" onclick="saveBidang()" style="flex:1"><i data-lucide="save" class="lucide-sm"></i> Simpan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="modPejabat">
+  <div class="mb" style="max-width:380px;">
+    <div class="mhd">
+      <div class="mtl" id="modPejabatT"><i data-lucide="user-plus"></i> Tambah Pejabat</div>
+      <div class="mcl" onclick="closeModal('modPejabat')"><i data-lucide="x"></i></div>
+    </div>
+    <div class="mbd" style="padding-bottom:24px;">
+      <div style="font-size:13px; color:var(--ts); margin-bottom:20px;">Masukkan nama jabatan/pejabat untuk penandatangan surat.</div>
+      <div class="fg">
+        <label class="fl">Nama Pejabat / Jabatan *</label>
+        <input type="text" class="fc" id="pejabat_name" placeholder="Contoh: Direktur LPIS">
+      </div>
+      <div style="display:flex; gap:16px; margin-top:32px;">
+        <button class="btn bg2" onclick="closeModal('modPejabat')" style="flex:1">Batal</button>
+        <button class="btn bp2" onclick="savePejabat()" style="flex:1"><i data-lucide="save" class="lucide-sm"></i> Simpan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="modKategori">
+  <div class="mb" style="max-width:380px;">
+    <div class="mhd">
+      <div class="mtl" id="modKategoriT"><i data-lucide="folder-plus"></i> Tambah Kategori</div>
+      <div class="mcl" onclick="closeModal('modKategori')"><i data-lucide="x"></i></div>
+    </div>
+    <div class="mbd" style="padding-bottom:24px;">
+      <div style="font-size:13px; color:var(--ts); margin-bottom:20px;">Masukkan nama kategori arsip dokumen baru.</div>
+      <div class="fg">
+        <label class="fl">Nama Kategori *</label>
+        <input type="text" class="fc" id="kategori_name" placeholder="Contoh: SK Yayasan">
+      </div>
+      <div style="display:flex; gap:16px; margin-top:32px;">
+        <button class="btn bg2" onclick="closeModal('modKategori')" style="flex:1">Batal</button>
+        <button class="btn bp2" onclick="saveKategori()" style="flex:1"><i data-lucide="save" class="lucide-sm"></i> Simpan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="modUser">
+  <div class="mb" style="max-width:400px;">
+    <div class="mhd">
+      <div class="mtl"><i data-lucide="key"></i> Reset Password</div>
+      <div class="mcl" onclick="closeModal('modUser')"><i data-lucide="x"></i></div>
+    </div>
+    <div class="mbd" style="padding-bottom:24px;">
+      <div style="font-size:14px; color:var(--ts); margin-bottom:20px;">Ganti password akses untuk: <strong id="resetUserTarget" style="color:var(--tp)">Nama Unit</strong></div>
+      <div class="fg">
+        <label class="fl">Password Baru *</label>
+        <input type="text" class="fc" id="new_password_input" placeholder="Ketik password baru">
+      </div>
+      <div style="display:flex; gap:16px; margin-top:32px;">
+        <button class="btn bg2" onclick="closeModal('modUser')" style="flex:1">Batal</button>
+        <button class="btn bp2" onclick="saveNewPassword()" style="flex:1"><i data-lucide="save" class="lucide-sm"></i> Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="modCopy">
+  <div class="mb" style="max-width:360px; text-align:center;">
+    <div class="mhd" style="border-bottom:none; padding-bottom:0; justify-content:center;"><div class="mtl"><i data-lucide="check-circle" class="lucide-sm" style="color:var(--a1)"></i> Berhasil Disimpan</div></div>
+    <div class="mbd" style="padding-bottom:20px;">
+      <div style="font-size:13px; color:var(--ts); margin-bottom:16px; line-height:1.5;">Surat Keluar baru berhasil ditambahkan. Silakan salin No. Surat di bawah ini:</div>
+      <input class="fc" id="copyNoSkVal" readonly style="text-align:center; font-weight:800; font-size:18px; margin-bottom:24px; color:var(--a1); border-color:var(--a1); background:rgba(16,185,129,0.05);">
+      <div class="fac" style="justify-content:center; background:transparent; border-top:none; margin:0; padding:0;">
+        <button class="btn bg2 bsm" onclick="closeModal('modCopy')">Tutup</button>
+        <button class="btn bp2 bsm" onclick="copyNoSurat()"><i data-lucide="copy" class="lucide-sm"></i> Salin Nomor</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="modShare">
+  <div class="mb" style="max-width:340px; text-align:center;">
+    <div class="mhd" style="border-bottom:none; padding-bottom:0; justify-content:center; position:relative; background:transparent;">
+      <div class="mtl"><i data-lucide="share-2" class="lucide-sm"></i> Bagikan Dokumen</div>
+      <div class="mcl" onclick="closeModal('modShare')" style="position:absolute; right:20px; top:20px;"><i data-lucide="x" class="lucide-sm"></i></div>
+    </div>
+    <div class="mbd" style="padding-bottom:24px;">
+      <div style="font-size:13px; color:var(--ts); margin-bottom:16px;">Scan QR Code atau bagikan link Drive ini via WhatsApp:</div>
+      <div id="qrRenderBox" class="qr-box" style="margin:0 auto 16px auto; display:inline-block; padding:16px; border-radius:16px;"></div>
+      <div style="font-size:11px; background:var(--bg); padding:12px; border-radius:12px; border:1px solid var(--gb); word-break:break-all; user-select:all; color:var(--tp); font-weight:500;" id="qrLinkText">-</div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:24px;">
+        <button class="btn bg2 bsm" style="flex:1;" onclick="showToast('🔗 Link disalin!','ok')"><i data-lucide="copy" class="lucide-sm"></i> Salin</button>
+        <a id="waShareBtn" href="#" target="_blank" class="btn bp2 bsm" style="flex:1; background:#25D366; box-shadow:0 8px 20px rgba(37,211,102,0.3); border-color:transparent;"><i data-lucide="message-circle" class="lucide-sm"></i> Kirim WA</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="modTembusan">
+  <div class="mb">
+    <div class="mhd">
+      <div class="mtl" id="modTembusanT"><i data-lucide="plus-circle"></i> Tambah Tembusan</div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button class="btn-top-save" onclick="saveTembusan()" title="Simpan Data"><i data-lucide="save"></i></button>
+        <div class="mcl" onclick="closeModal('modTembusan')"><i data-lucide="x"></i></div>
+      </div>
+    </div>
+    <div class="mbd">
+      <div class="st" style="font-size:14.5px;margin-bottom:16px;color:var(--a1)"><i data-lucide="copy" class="lucide-sm"></i> Detail Dokumen Tembusan</div>
+      <div class="fg2">
+        <div class="fg"><label class="fl">Satuan Pendidikan *</label>
+          <select class="fc" id="t_unit">
+            <option value="">Pilih Satuan Pendidikan</option>
+            <option value="Yayasan">Yayasan</option>
+            <option value="TKIS 1">TKIS 1</option>
+            <option value="TKIS 2">TKIS 2</option>
+            <option value="SDIS 1">SDIS 1</option>
+            <option value="SDIS 2">SDIS 2</option>
+            <option value="SMPIS">SMPIS</option>
+            <option value="SMAIS">SMAIS</option>
+            <option value="Mahad">Mahad</option>
+          </select>
+        </div>
+        <div class="fg"><label class="fl">Jenis Surat *</label><input class="fc" id="t_jenis" placeholder="Contoh: Pemberitahuan"></div>
+      </div>
+      <div class="fg2">
+        <div class="fg"><label class="fl">Tanggal Surat *</label><input class="fc" type="date" id="t_tgl" required></div>
+        <div class="fg"><label class="fl">No. Surat *</label><input class="fc" id="t_no" placeholder="Nomor surat tembusan"></div>
+      </div>
+      <div class="fg"><label class="fl">Tujuan Surat *</label><input class="fc" id="t_to" placeholder="Ditujukan kepada..."></div>
+      <div class="fg"><label class="fl">Perihal *</label><input class="fc" id="t_hl" placeholder="Perihal dokumen..."></div>
+      
+      <div class="fg">
+        <label class="fl">Upload File Surat (Wajib) *</label>
+        <div class="fdp" onclick="document.getElementById('t_f').click()">
+          <i data-lucide="upload-cloud" class="fdp-ic lucide-lg" style="margin-bottom:8px;"></i>
+          <div class="fdp-t">Upload PDF/JPG</div>
+          <input type="file" id="t_f" style="display:none" accept=".pdf,.jpeg,.jpg,.png" onchange="fileSelected(this,'t_fl')">
+        </div>
+        <div id="t_fl" style="font-size:13px;color:var(--a1);margin-top:8px;display:none;font-weight:700;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="modViewTembusan">
+  <div class="mb">
+    <div class="mhd">
+      <div class="mtl"><i data-lucide="file-text"></i> Detail Tembusan</div>
+      <div style="display:flex; align-items:center; gap:6px;">
+        <button class="btn-top-action" id="btnShareTTop" title="Bagikan Link"><i data-lucide="share-2"></i></button>
+        <div class="mcl" onclick="closeModal('modViewTembusan')"><i data-lucide="x"></i></div>
+      </div>
+    </div>
+    <div class="mbd">
+      <div class="st" style="font-size:14.5px;margin-bottom:16px;color:var(--a1)"><i data-lucide="copy" class="lucide-sm"></i> Informasi Dokumen</div>
+      <table class="v-table">
+        <tr><td>Unit / Satuan</td><td id="vt_unit"></td></tr>
+        <tr><td>No. Surat</td><td id="vt_no"></td></tr>
+        <tr><td>Tgl Surat</td><td id="vt_tgl"></td></tr>
+        <tr><td>Jenis Surat</td><td id="vt_jenis"></td></tr>
+        <tr><td>Tujuan</td><td id="vt_to"></td></tr>
+        <tr><td>Perihal</td><td id="vt_hl"></td></tr>
+      </table>
+
+      <div id="vt_lamp_btn" style="display:none; margin-bottom:24px">
+        <a id="vt_lamp_link" href="#" target="_blank" class="btn bg2" style="width:100%; border-color:var(--a1); color:var(--a1)"><i data-lucide="external-link" class="lucide-sm"></i> Buka Dokumen Tembusan (G-Drive)</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="modArsip">
+  <div class="mb">
+    <div class="mhd">
+      <div class="mtl" id="modArsipT"><i data-lucide="file-plus"></i> Tambah Arsip Manual</div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button class="btn-top-save" onclick="saveArsip()" title="Simpan Data"><i data-lucide="save"></i></button>
+        <div class="mcl" onclick="closeModal('modArsip')"><i data-lucide="x"></i></div>
+      </div>
+    </div>
+    <div class="mbd">
+      <div class="fg2">
+        <div class="fg"><label class="fl">Tanggal Dokumen *</label><input class="fc" type="date" id="a_tgl" required></div>
+        <div class="fg"><label class="fl">Kategori Arsip *</label>
+          <select class="fc" id="a_kat">
+            <option value="">Pilih Kategori</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">No. Dokumen / Surat *</label><input class="fc" id="a_no" placeholder="Contoh: 001/SK/2026"></div>
+      <div class="fg"><label class="fl">Perihal / Nama Dokumen *</label><input class="fc" id="a_hl" placeholder="Perihal dokumen..."></div>
+      
+      <div class="fg">
+        <label class="fl">File Dokumen (Wajib) *</label>
+        <div class="fdp" onclick="document.getElementById('a_f').click()">
+          <i data-lucide="upload-cloud" class="fdp-ic lucide-lg" style="margin-bottom:8px;"></i>
+          <div class="fdp-t">Upload PDF/JPG</div>
+          <input type="file" id="a_f" style="display:none" accept=".pdf,.jpeg,.jpg,.png" onchange="fileSelected(this,'a_fl')">
+        </div>
+        <div id="a_fl" style="font-size:13px;color:var(--a1);margin-top:8px;display:none;font-weight:700;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="modD">
+  <div class="mb">
+    <div class="mhd">
+      <div class="mtl" id="modDT"><i data-lucide="plus-circle"></i> Tambah Disposisi</div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button class="btn-top-save" onclick="saveDisposisi()" title="Simpan Data"><i data-lucide="save"></i></button>
+        <div class="mcl" onclick="closeModal('modD')"><i data-lucide="x"></i></div>
+      </div>
+    </div>
+    <div class="mbd">
+      <div class="st" style="font-size:14.5px;margin-bottom:16px;color:var(--a1)"><i data-lucide="inbox" class="lucide-sm"></i> Data Surat Masuk</div>
+      <div class="fg2">
+        <div class="fg"><label class="fl">No. Surat *</label><input class="fc" id="d_no" placeholder="001/SM/2026"></div>
+        <div class="fg"><label class="fl">Pengirim *</label><input class="fc" id="d_fr" placeholder="Nama instansi pengirim"></div>
+      </div>
+      <div class="fg2">
+        <div class="fg"><label class="fl">Tanggal Surat *</label><input class="fc" type="date" id="d_tgl_s" required></div>
+        <div class="fg"><label class="fl">Tanggal Diterima *</label><input class="fc" type="date" id="d_tgl_t" required></div>
+      </div>
+      <div class="fg"><label class="fl">Perihal *</label><input class="fc" id="d_hl" placeholder="Perihal surat..."></div>
+      <div class="fg2">
+        <div class="fg">
+          <label class="fl">Lampiran Surat</label>
+          <div class="fdp" onclick="document.getElementById('d_f').click()">
+            <i data-lucide="upload-cloud" class="fdp-ic lucide-lg" style="margin-bottom:8px;"></i>
+            <div class="fdp-t">Upload PDF/JPG</div>
+            <input type="file" id="d_f" style="display:none" accept=".pdf,.jpeg,.jpg,.png" onchange="fileSelected(this,'d_fl')">
+          </div>
+          <div id="d_fl" style="font-size:13px;color:var(--a1);margin-top:8px;display:none;font-weight:700;"></div>
+        </div>
+        <div class="fg"><label class="fl">Status Proses</label>
+          <select class="fc" id="d_st" onchange="toggleHasilDisposisi()">
+            <option value="Pending">Pending (Proses ke Pimpinan)</option>
+            <option value="Selesai">Selesai (Hasil dari Pimpinan)</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="sec_hasil_disp" style="display:none; margin-top:16px; padding-top:24px; border-top:1px dashed var(--gb)">
+        <div class="st" style="font-size:14.5px;margin-bottom:16px;color:var(--ok)"><i data-lucide="check-circle-2" class="lucide-sm"></i> Hasil Disposisi Pimpinan</div>
+        <div class="fg2">
+          <div class="fg"><label class="fl">Disposisi Ke *</label>
+            <select class="fc" id="d_to">
+              <option value="">Pilih penerima</option>
+              <option value="Sekretaris Direktur">Sekretaris Direktur</option>
+              <option value="Plt Asdir I, Kesiswaan, Humas, PPDB">Plt Asdir I, Kesiswaan, Humas, PPDB</option>
+              <option value="Kabag Kurikulum LPIS">Kabag Kurikulum LPIS</option>
+              <option value="Kapus. SEP LPIS">Kapus. SEP LPIS</option>
+              <option value="Kapus. SMI LPIS">Kapus. SMI LPIS</option>
+              <option value="Kapus. Bisnis">Kapus. Bisnis</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label class="fl">Scan Hasil Disposisi *</label>
+            <div class="fdp" onclick="document.getElementById('d_f_hasil').click()" style="border-color:var(--ok); background:rgba(34,197,94,0.05)">
+              <i data-lucide="file-check-2" class="fdp-ic lucide-lg" style="color:var(--ok); margin-bottom:8px;"></i>
+              <div class="fdp-t" style="color:var(--ok)">Upload Scan ACC</div>
+              <input type="file" id="d_f_hasil" style="display:none" accept=".pdf,.jpeg,.jpg,.png" onchange="fileSelected(this,'d_fl_hasil')">
+            </div>
+            <div id="d_fl_hasil" style="font-size:13px;color:var(--ok);margin-top:8px;display:none;font-weight:700;"></div>
+          </div>
+        </div>
+        <div class="fg"><label class="fl">Catatan Disposisi *</label><textarea class="fc" id="d_ct" placeholder="Instruksi pimpinan..."></textarea></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="modViewD">
+  <div class="mb">
+    <div class="mhd">
+      <div class="mtl"><i data-lucide="file-text"></i> Detail Disposisi</div>
+      <div style="display:flex; align-items:center; gap:6px;">
+        <button class="btn-top-action" id="btnShareDTop" title="Bagikan Link"><i data-lucide="share-2"></i></button>
+        <button class="btn-top-action" id="btnDownloadJPGTop" title="Unduh JPG"><i data-lucide="image"></i></button>
+        <button class="btn-top-action" id="btnCetakDisposisiTop" title="Cetak PDF"><i data-lucide="printer"></i></button>
+        <div class="mcl" onclick="closeModal('modViewD')"><i data-lucide="x"></i></div>
+      </div>
+    </div>
+    <div class="mbd">
+      <div class="st" style="font-size:14.5px;margin-bottom:12px;color:var(--a1)"><i data-lucide="inbox" class="lucide-sm"></i> Informasi Surat Masuk</div>
+      <table class="v-table">
+        <tr><td>No. Surat</td><td id="vd_no"></td></tr>
+        <tr><td>Pengirim</td><td id="vd_fr"></td></tr>
+        <tr><td>Tgl Surat</td><td id="vd_tgl_s"></td></tr>
+        <tr><td>Tgl Diterima</td><td id="vd_tgl_t"></td></tr>
+        <tr><td>Perihal</td><td id="vd_hl"></td></tr>
+      </table>
+
+      <div id="vd_lamp_btn" style="display:none; margin-bottom:24px">
+        <a id="vd_lamp_link" href="#" target="_blank" class="btn bg2 bsm" style="width:100%; border-color:var(--a1); color:var(--a1)"><i data-lucide="external-link" class="lucide-sm"></i> Buka Lampiran Surat (G-Drive)</a>
+      </div>
+
+      <div id="vd_hasil_section" style="display:none;">
+        <div class="st" style="font-size:14.5px;margin-bottom:12px;color:var(--ok)"><i data-lucide="check-circle-2" class="lucide-sm"></i> Hasil Disposisi</div>
+        <table class="v-table">
+          <tr><td>Status</td><td id="vd_st"></td></tr>
+          <tr><td>Diteruskan Ke</td><td id="vd_to"></td></tr>
+          <tr><td>Catatan Pimpinan</td><td id="vd_ct"></td></tr>
+        </table>
+        <div id="vd_hasil_btn" style="display:none; margin-top:16px">
+          <a id="vd_hasil_link" href="#" target="_blank" class="btn bg2 bsm" style="width:100%; border-color:var(--ok); color:var(--ok)"><i data-lucide="external-link" class="lucide-sm"></i> Buka Scan Hasil (G-Drive)</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="modSK">
+  <div class="mb">
+    <div class="mhd">
+      <div class="mtl" id="modSKT"><i data-lucide="plus-circle"></i> Tambah Surat Keluar</div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button class="btn-top-save" onclick="saveSuratKeluar()" title="Simpan Data"><i data-lucide="save"></i></button>
+        <div class="mcl" onclick="closeModal('modSK')"><i data-lucide="x"></i></div>
+      </div>
+    </div>
+    <div class="mbd">
+      <div class="fg2">
+        <div class="fg"><label class="fl">Tanggal Pembuatan *</label><input class="fc" type="date" id="sk_tgl" onchange="generateNoSK()" required></div>
+        <div class="fg"><label class="fl">Bidang *</label>
+          <select class="fc" id="sk_bdg" onchange="generateNoSK()">
+            <option value="">Pilih Bidang</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">No. Surat (Otomatis)</label><input class="fc" id="sk_no" readonly style="background:var(--bg); border:1px dashed var(--tm); box-shadow:none; color:var(--ts); font-weight:bold; cursor:not-allowed;" placeholder="Pilih tanggal & bidang..."></div>
+      <div class="fg"><label class="fl">Tujuan *</label><input class="fc" id="sk_to" placeholder="Nama & instansi tujuan"></div>
+      <div class="fg"><label class="fl">Perihal *</label><input class="fc" id="sk_hl" placeholder="Perihal surat keluar..."></div>
+      <div class="fg2">
+        <div class="fg"><label class="fl">Penanda Tangan</label>
+          <select class="fc" id="sk_ttd">
+          </select>
+        </div>
+        <div class="fg"><label class="fl">Jenis Surat</label>
+          <select class="fc" id="sk_j"><option>Surat Dinas</option><option>Surat Undangan</option><option>Surat Keputusan</option><option>Nota Dinas</option><option>Memorandum</option></select>
+        </div>
+      </div>
+      <div class="fg2">
+        <div class="fg">
+          <label class="fl">Draft Surat (Sebelum ACC)</label>
+          <div class="fdp" onclick="document.getElementById('sk_f').click()">
+            <i data-lucide="upload-cloud" class="fdp-ic lucide-lg" style="margin-bottom:8px;"></i>
+            <div class="fdp-t">Upload Draft PDF</div>
+            <input type="file" id="sk_f" style="display:none" accept=".pdf,.docx" onchange="fileSelected(this,'sk_fl')">
+          </div>
+          <div id="sk_fl" style="font-size:13px;color:var(--a1);margin-top:8px;display:none;font-weight:700;"></div>
+        </div>
+        <div class="fg"><label class="fl">Status Surat</label>
+          <select class="fc" id="sk_st" onchange="toggleSKAcc()">
+            <option value="Proses">Proses (Menunggu ACC Pimpinan)</option>
+            <option value="Selesai">Selesai (Sudah ACC Pimpinan)</option>
+            <option value="Dibagikan">Dibagikan (Tersampaikan)</option>
+          </select>
+        </div>
+      </div>
+      
+      <div id="sec_sk_acc" style="display:none; margin-top:16px; padding-top:24px; border-top:1px dashed var(--gb)">
+        <div class="st" style="font-size:13.5px;margin-bottom:16px;color:var(--ok)"><i data-lucide="check-circle-2" class="lucide-sm"></i> Dokumen Final (ACC Pimpinan)</div>
+        <div class="fg">
+          <label class="fl">Lampiran Surat ACC *</label>
+          <div class="fdp" onclick="document.getElementById('sk_f_acc').click()" style="border-color:var(--ok); background:rgba(34,197,94,0.05)">
+            <i data-lucide="file-check-2" class="fdp-ic lucide-lg" style="color:var(--ok); margin-bottom:8px;"></i>
+            <div class="fdp-t" style="color:var(--ok)">Upload File ACC</div>
+            <input type="file" id="sk_f_acc" style="display:none" accept=".pdf,.jpeg,.jpg,.png" onchange="fileSelected(this,'sk_fl_acc')">
+          </div>
+          <div id="sk_fl_acc" style="font-size:13px;color:var(--ok);margin-top:8px;display:none;font-weight:700;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="modViewSK">
+  <div class="mb">
+    <div class="mhd">
+      <div class="mtl"><i data-lucide="file-text"></i> Detail Surat Keluar</div>
+      <div style="display:flex; align-items:center; gap:6px;">
+        <button class="btn-top-action" id="btnShareSKTop" title="Bagikan Link"><i data-lucide="share-2"></i></button>
+        <div class="mcl" onclick="closeModal('modViewSK')"><i data-lucide="x"></i></div>
+      </div>
+    </div>
+    <div class="mbd">
+      <div class="st" style="font-size:13.5px;margin-bottom:12px;color:var(--a1)"><i data-lucide="send" class="lucide-sm"></i> Informasi Surat</div>
+      <table class="v-table">
+        <tr><td>No. Surat</td><td id="vsk_no"></td></tr>
+        <tr><td>Tanggal</td><td id="vsk_tgl"></td></tr>
+        <tr><td>Bidang</td><td id="vsk_bdg"></td></tr>
+        <tr><td>Tujuan</td><td id="vsk_to"></td></tr>
+        <tr><td>Perihal</td><td id="vsk_hl"></td></tr>
+        <tr><td>Jenis Surat</td><td id="vsk_j"></td></tr>
+        <tr><td>Penanda Tangan</td><td id="vsk_ttd"></td></tr>
+      </table>
+
+      <div id="vsk_draft_btn" style="display:none; margin-bottom:24px">
+        <a id="vsk_draft_link" href="#" target="_blank" class="btn bg2 bsm" style="width:100%; border-color:var(--a1); color:var(--a1)"><i data-lucide="external-link" class="lucide-sm"></i> Buka Draft Surat (G-Drive)</a>
+      </div>
+
+      <div class="st" style="font-size:13.5px;margin-bottom:12px;color:var(--ok)"><i data-lucide="check-circle-2" class="lucide-sm"></i> Status Terkini</div>
+      <table class="v-table">
+        <tr><td>Status pada sistem</td><td id="vsk_st"></td></tr>
+      </table>
+
+      <div id="vsk_acc_btn" style="display:none; margin-top:16px">
+        <a id="vsk_acc_link" href="#" target="_blank" class="btn bg2 bsm" style="width:100%; border-color:var(--ok); color:var(--ok)"><i data-lucide="external-link" class="lucide-sm"></i> Buka Surat Final ACC (G-Drive)</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="shell" id="appShell">
+  <div class="sb-ov" id="sbOv" onclick="toggleSidebar()"></div>
+
+  <aside class="ea-sidebar" id="sidebar">
+    <div class="logo">
+      <div class="logo-i">
+        <img src="[https://i.ibb.co.com/4RFTZF8Z/20260501-125037-0000.png](https://i.ibb.co.com/4RFTZF8Z/20260501-125037-0000.png)" alt="Logo LPI">
+      </div>
+      <div><div class="logo-n">E-Admin</div><div class="logo-s">LPIS Malang</div></div>
+    </div>
+    <div class="nav-lbl">Menu Utama</div>
+    <nav>
+      <div class="ni act" data-page="dashboard" onclick="goToPage('dashboard')"><img src="[https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/House/3D/house_3d.png](https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/House/3D/house_3d.png)" class="ni-ic-3d" alt="Home"> Dashboard</div>
+      <div class="ni admin-only" data-page="disposisi" onclick="goToPage('disposisi')"><img src="[https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Inbox%20tray/3D/inbox_tray_3d.png](https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Inbox%20tray/3D/inbox_tray_3d.png)" class="ni-ic-3d" alt="Inbox"> Disposisi Surat<span class="ni-bd" id="bdgD">0</span></div>
+      <div class="ni admin-only" data-page="sk" onclick="goToPage('sk')"><img src="[https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Outbox%20tray/3D/outbox_tray_3d.png](https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Outbox%20tray/3D/outbox_tray_3d.png)" class="ni-ic-3d" alt="Outbox"> Surat Keluar</div>
+      <div class="ni" data-page="tembusan" onclick="goToPage('tembusan')"><img src="[https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Clipboard/3D/clipboard_3d.png](https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Clipboard/3D/clipboard_3d.png)" class="ni-ic-3d" alt="Tembusan"> Tembusan Surat</div>
+      <div class="ni admin-only" data-page="arsip" onclick="goToPage('arsip')"><img src="[https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/File%20cabinet/3D/file_cabinet_3d.png](https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/File%20cabinet/3D/file_cabinet_3d.png)" class="ni-ic-3d" alt="Arsip"> Arsip Dokumen</div>
+      <div class="ni admin-only" data-page="log" onclick="goToPage('log')"><img src="[https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Scroll/3D/scroll_3d.png](https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Scroll/3D/scroll_3d.png)" class="ni-ic-3d" alt="Log"> Log Aktivitas</div>
+      <div class="ni admin-only" data-page="pengaturan" onclick="goToPage('pengaturan')"><img src="[https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Gear/3D/gear_3d.png](https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Gear/3D/gear_3d.png)" class="ni-ic-3d" alt="Settings"> Pengaturan</div>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="pg-head-wrap">
+        <div class="logo-hp"><img src="[https://i.ibb.co.com/4RFTZF8Z/20260501-125037-0000.png](https://i.ibb.co.com/4RFTZF8Z/20260501-125037-0000.png)" alt="Logo LPI"></div>
+        <div class="hmb" onclick="toggleSidebar()"><i data-lucide="menu"></i></div>
+        <div style="min-width:0; display:flex; flex-direction:column; justify-content:center;">
+          <div class="pg-s" id="pgS" style="display:flex; align-items:center; gap:6px; font-weight:600; color:var(--a1); font-size:12.5px; letter-spacing:0.5px; margin-bottom:4px; margin-top:0;">
+            <i data-lucide="home" class="lucide-sm"></i> Beranda <span id="bcText" style="color:var(--ts)">/ Dashboard</span>
+          </div>
+          <h1 class="pg-t" id="pgT" style="margin:0;">Dashboard</h1>
+        </div>
+      </div>
+      
+      <div class="tbr">
+        <div id="realtimeClock" class="clock-widget admin-only">
+          <i data-lucide="calendar-clock" class="lucide-sm" style="color:var(--a1)"></i> 
+          <span id="clockDate">Memuat tanggal...</span>
+          <div class="clock-divider"></div>
+          <span id="clockTime" style="color:var(--tp)">--:-- WIB</span>
+        </div>
+
+        <div class="tsw-top">
+          <i data-lucide="sun" class="lucide-sm" style="color:var(--tm)"></i>
+          <div class="ttog" onclick="toggleTheme()" title="Mode Malam/Siang"></div>
+          <i data-lucide="moon" class="lucide-sm" style="color:var(--tm)"></i>
+        </div>
+        
+        <div class="tibtn admin-only" onclick="openOmniSearch()" title="Pencarian Global (Ctrl+K)"><i data-lucide="search"></i></div>
+
+        <div class="notif-wrap admin-only">
+          <div class="tibtn" onclick="toggleNotif()"><i data-lucide="bell"></i><div class="ndot" id="notifDot" style="display:none;"></div></div>
+          <div id="notifBox" class="notif-box">
+            <div style="padding:20px; border-bottom:1px solid var(--gb); font-weight:800; font-size:15px; display:flex; justify-content:space-between; color:var(--tp);">
+              Notifikasi <span class="bdg bp" id="notifCountBd" style="font-size:12px;">0</span>
+            </div>
+            <div id="notifList"></div>
+          </div>
+        </div>
+        
+        <div class="user-wrap">
+          <div class="user-avatar" id="topAvt" onclick="toggleUserMenu()">--</div>
+          <div id="userBox" class="user-box">
+            <div class="ub-head">
+              <div class="ub-avt" id="ubAvt">--</div>
+              <div class="ub-info">
+                <div class="ub-name" id="ubName">Nama</div>
+                <div class="ub-role" id="ubRole">Role</div>
+              </div>
+            </div>
+            <div class="ub-body">
+              <div class="ub-item" onclick="confirmLogout()">
+                <i data-lucide="log-out" class="lucide-sm"></i> Keluar Sistem
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- DASHBOARD -->
+      <div class="pg act" id="pg-dashboard">
+        <div id="adminDashboardView" class="admin-only">
+          <div class="hero-banner">
+             <div class="hero-text">
+                 <h2 id="heroTitle">Selamat Datang, Admin! ☀️</h2>
+                 <p>Semoga harimu produktif. Berikut adalah ringkasan aktivitas sistem E-Admin LPIS hari ini.</p>
+             </div>
+             <img src="[https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Trophy/3D/trophy_3d.png](https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Trophy/3D/trophy_3d.png)" alt="Juara" class="hero-img">
+          </div>
+          <div class="focus-pill" id="focusPill">
+             <span class="pill-icon" style="display:flex; align-items:center; color:var(--tm);"><i data-lucide="hourglass" class="lucide-sm"></i></span> <span id="pillText">Memuat informasi tugas...</span>
+          </div>
+          <div class="quick-actions">
+              <div class="app-btn" onclick="openModal('modD','add')">
+                  <div class="app-btn-ic c1"><i data-lucide="plus-circle"></i></div><span>Disposisi Baru</span>
+              </div>
+              <div class="app-btn" onclick="openModal('modSK','add')">
+                  <div class="app-btn-ic c2"><i data-lucide="send"></i></div><span>Surat Keluar</span>
+              </div>
+              <div class="app-btn" onclick="openModalTembusan('add')">
+                  <div class="app-btn-ic c3"><i data-lucide="copy"></i></div><span>Tembusan Unit</span>
+              </div>
+          </div>
+          <div class="stats">
+            <div class="sc s1"><div class="sc-head"><img src="[https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Inbox%20tray/3D/inbox_tray_3d.png](https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Inbox%20tray/3D/inbox_tray_3d.png)" class="img-3d-stat"></div><div class="sc-v" id="sv1">0</div><div class="sc-l">Total Disposisi</div><div class="sc-c">Tahun ini</div></div>
+            <div class="sc s2"><div class="sc-head"><img src="[https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Envelope/3D/envelope_3d.png](https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Envelope/3D/envelope_3d.png)" class="img-3d-stat"></div><div class="sc-v" id="sv2">0</div><div class="sc-l">Surat Keluar</div><div class="sc-c">Tahun ini</div></div>
+            <div class="sc s3"><div class="sc-head"><img src="[https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Hourglass%20not%20done/3D/hourglass_not_done_3d.png](https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Hourglass%20not%20done/3D/hourglass_not_done_3d.png)" class="img-3d-stat"></div><div class="sc-v" id="sv3">0</div><div class="sc-l">Pending Proses</div><div class="sc-c">Menunggu Pimpinan</div></div>
+            <div class="sc s4"><div class="sc-head"><img src="[https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Check%20mark%20button/3D/check_mark_button_3d.png](https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Check%20mark%20button/3D/check_mark_button_3d.png)" class="img-3d-stat"></div><div class="sc-v" id="sv4">0</div><div class="sc-l">Selesai</div><div class="sc-c">Telah diarsipkan</div></div>
+          </div>
+          <div class="card" style="margin-bottom:24px;"><div class="cb">
+            <div class="sh"><div class="st"><i data-lucide="bar-chart"></i> Statistik Dokumen Satuan (Bulan Ini)</div></div>
+            <div id="unitActivityBox" class="custom-scroll" style="max-height:240px; overflow-y:auto; padding-right:8px; display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px 32px;"></div>
+          </div></div>
+          <div class="card" style="margin-bottom:24px;">
+            <div class="sh" style="padding: 20px 24px 0 24px; margin-bottom: 12px;"><div class="st" style="font-size: 15px;"><i data-lucide="clock" class="lucide-sm" style="color:var(--a1)"></i> Tugas Pending Terkini</div></div>
+            <div class="tw" style="max-height: 300px; border-radius:0; border:none; border-top:1px solid var(--gb); border-bottom:1px solid var(--gb);">
+              <table style="width: 100%;"><thead><tr><th>No. Surat</th><th>Pengirim</th><th>Perihal</th><th>Status</th></tr></thead><tbody id="dashRecentTb"></tbody></table>
+            </div>
+            <div style="padding: 16px 24px; text-align: center; background:var(--bg);"><button class="btn bg2 bsm" onclick="goToPage('disposisi')">Lihat Semua Disposisi</button></div>
+          </div>
+          <div class="card" style="margin-bottom:24px;">
+            <div class="sh" style="padding: 20px 24px 0 24px; margin-bottom: 12px;"><div class="st" style="font-size: 15px;"><i data-lucide="zap" class="lucide-sm" style="color:var(--a1)"></i> Tembusan Unit Terbaru (Live)</div></div>
+            <div class="tw" style="max-height: 300px; border-radius:0; border:none; border-top:1px solid var(--gb); border-bottom:1px solid var(--gb);">
+              <table style="width: 100%;"><thead><tr><th>Unit</th><th>No. Surat</th><th>Kepada</th><th>Perihal</th><th>Waktu</th></tr></thead><tbody id="dashTembusanTb"></tbody></table>
+            </div>
+            <div style="padding: 16px 24px; text-align: center; background:var(--bg);"><button class="btn bg2 bsm" onclick="goToPage('tembusan')">Lihat Semua Tembusan</button></div>
+          </div>
+        </div>
+
+        <div id="unitDashboardView" style="display:none;">
+          <div class="card card-3d" style="margin-bottom:24px; padding:32px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px; position:relative; z-index:2;">
+              <div>
+                <div class="emoji-3d">👋</div>
+                <h2 style="margin:0 0 8px 0; font-size:24px; font-weight:800; letter-spacing:-0.5px;" id="unitWelcomeName">Halo, Unit!</h2>
+                <p style="margin:0; opacity:0.9; font-size:14px; max-width:400px; line-height:1.5;">Selamat datang di E-Admin LPIS. Anda dapat memantau dan mengirimkan salinan dokumen tembusan kepada Yayasan secara langsung di sini.</p>
+              </div>
+              <button class="btn" style="background:#fff; color:var(--a1); box-shadow:0 8px 24px rgba(0,0,0,0.15);" onclick="openModalTembusan('add')"><i data-lucide="plus-circle" class="lucide-sm"></i> Buat Tembusan Baru</button>
+            </div>
+          </div>
+          <div class="stats" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom:24px;">
+            <div class="sc s1" style="padding:20px; box-shadow:0 8px 24px rgba(21,128,61,0.2);"><div class="sc-head"><div class="emoji-3d" style="margin-bottom:0;">📦</div></div><div class="sc-v" id="uStat1" style="font-size:36px; margin-top:12px;">0</div><div class="sc-l">Total Tembusan Dikirim</div></div>
+            <div class="sc s3" style="padding:20px; box-shadow:0 8px 24px rgba(14,116,144,0.2);"><div class="sc-head"><div class="emoji-3d" style="margin-bottom:0;">⏰</div></div><div class="sc-v" id="uStat2" style="font-size:36px; margin-top:12px;">0</div><div class="sc-l">Tembusan Bulan Ini</div></div>
+          </div>
+          <div class="card" style="margin-bottom:24px;">
+            <div class="sh" style="padding: 24px 24px 0 24px; margin-bottom: 16px;"><div class="st" style="font-size: 16px; display:flex; align-items:center; gap:10px;"><span style="font-size:20px;">📝</span> Log Riwayat Tembusan Terkini</div></div>
+            <div class="tw" style="max-height: 400px; border-radius:0; border:none; border-top:1px solid var(--gb); border-bottom:1px solid var(--gb);">
+              <table style="width: 100%;"><thead><tr><th>Status</th><th>No. Surat</th><th>Kepada</th><th>Perihal</th><th>Tgl & Jam Input</th><th>File</th></tr></thead><tbody id="unitLogTb"></tbody></table>
+            </div>
+            <div style="padding: 16px 24px; text-align: center; background:var(--bg);"><button class="btn bg2 bsm" onclick="goToPage('tembusan')">Buka Halaman Tembusan Penuh</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TEMBUSAN SURAT -->
+      <div class="pg" id="pg-tembusan">
+        <div class="tlb">
+          <div class="srw"><i data-lucide="search" class="sric"></i><input class="sri" placeholder="Cari surat / perihal..." oninput="filterTembusan()"></div>
+          <div class="filter-date">
+            <div class="f-d-item"><span>Dari</span><input type="date" id="f_t_start" onchange="filterTembusan()" required></div>
+            <div class="f-d-item"><span>Sampai</span><input type="date" id="f_t_end" onchange="filterTembusan()" required></div>
+          </div>
+          <select class="fc filter-select admin-only" id="f_t_unit" onchange="filterTembusan()">
+            <option value="">Semua Satuan</option><option value="Yayasan">Yayasan</option><option value="TKIS 1">TKIS 1</option><option value="TKIS 2">TKIS 2</option><option value="SDIS 1">SDIS 1</option><option value="SDIS 2">SDIS 2</option><option value="SMPIS">SMPIS</option><option value="SMAIS">SMAIS</option><option value="Mahad">Mahad</option>
+          </select>
+          <div class="tlb-btn-grp">
+            <button class="btn bg2" onclick="clearTembusanFilter()" title="Reset Filter"><i data-lucide="refresh-cw" class="lucide-sm"></i> Reset</button>
+            <button class="btn bg2" onclick="printRekap('tembusan')" title="Cetak Rekap PDF"><i data-lucide="printer" class="lucide-sm"></i> Rekap</button>
+            <button class="btn bp2" onclick="openModalTembusan('add')"><i data-lucide="plus" class="lucide-sm"></i> Tambah</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="tw"><table>
+            <thead><tr><th>#</th><th>NO. SURAT</th><th>WAKTU INPUT</th><th>UNIT</th><th>TUJUAN</th><th>PERIHAL</th><th>FILE</th><th style="text-align:right;">AKSI</th></tr></thead>
+            <tbody id="tTembusanTb"></tbody>
+          </table></div>
+          <div style="padding:20px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px; border-top:1px solid var(--gb);">
+            <div style="font-size:14px;color:var(--tm); font-weight:600;" id="tTembusanCt"></div><div class="pgi" id="tTembusanPg"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DISPOSISI -->
+      <div class="pg admin-only" id="pg-disposisi">
+        <div class="tlb">
+          <div class="srw"><i data-lucide="search" class="sric"></i><input class="sri" placeholder="Cari nomor/pengirim..." oninput="filterDisposisi()"></div>
+          <div class="filter-date">
+            <div class="f-d-item"><span>Dari</span><input type="date" id="f_d_start" onchange="filterDisposisi()" required></div>
+            <div class="f-d-item"><span>Sampai</span><input type="date" id="f_d_end" onchange="filterDisposisi()" required></div>
+          </div>
+          <select class="fc filter-select" id="f_d_st" onchange="filterDisposisi()"><option value="">Semua Status</option><option value="Pending">Pending</option><option value="Selesai">Selesai</option></select>
+          <div class="tlb-btn-grp">
+            <button class="btn bg2" onclick="exportCSV('disposisi')" title="Download CSV"><i data-lucide="download" class="lucide-sm"></i> CSV</button>
+            <button class="btn bg2" onclick="printRekap('disposisi')" title="Cetak Rekap PDF"><i data-lucide="printer" class="lucide-sm"></i> Rekap</button>
+            <button class="btn bp2 btn-add" onclick="openModal('modD','add')"><i data-lucide="plus" class="lucide-sm"></i> Tambah</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="tw"><table>
+            <thead><tr><th>#</th><th>NO. SURAT</th><th>TANGGAL</th><th>PENGIRIM</th><th>PERIHAL</th><th>DISPOSISI KE</th><th>STATUS</th><th style="text-align:right;">AKSI</th></tr></thead>
+            <tbody id="dTb"></tbody>
+          </table></div>
+          <div style="padding:20px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px; border-top:1px solid var(--gb);">
+            <div style="font-size:14px;color:var(--tm); font-weight:600;" id="dCt"></div><div class="pgi" id="dPg"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SURAT KELUAR -->
+      <div class="pg admin-only" id="pg-sk">
+        <div class="tlb">
+          <div class="srw"><i data-lucide="search" class="sric"></i><input class="sri" placeholder="Cari nomor/tujuan..." oninput="filterSuratKeluar()"></div>
+          <div class="filter-date">
+            <div class="f-d-item"><span>Dari</span><input type="date" id="f_sk_start" onchange="filterSuratKeluar()" required></div>
+            <div class="f-d-item"><span>Sampai</span><input type="date" id="f_sk_end" onchange="filterSuratKeluar()" required></div>
+          </div>
+          <select class="fc filter-select" id="f_sk_st" onchange="filterSuratKeluar()"><option value="">Semua Status</option><option value="Proses">Proses</option><option value="Selesai">Selesai</option><option value="Dibagikan">Dibagikan</option></select>
+          <div class="tlb-btn-grp">
+            <button class="btn bg2" onclick="exportCSV('sk')" title="Download CSV"><i data-lucide="download" class="lucide-sm"></i> CSV</button>
+            <button class="btn bg2" onclick="printRekap('sk')" title="Cetak Rekap PDF"><i data-lucide="printer" class="lucide-sm"></i> Rekap</button>
+            <button class="btn bp2 btn-add" onclick="openModal('modSK','add')"><i data-lucide="plus" class="lucide-sm"></i> Tambah</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="tw"><table>
+            <thead><tr><th>#</th><th>NO. SURAT</th><th>TANGGAL</th><th>TUJUAN</th><th>PERIHAL</th><th>STATUS</th><th style="text-align:right;">AKSI</th></tr></thead>
+            <tbody id="skTb"></tbody>
+          </table></div>
+          <div style="padding:20px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px; border-top:1px solid var(--gb);">
+            <div style="font-size:14px;color:var(--tm); font-weight:600;" id="skCt"></div><div class="pgi" id="skPg"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ARSIP -->
+      <div class="pg admin-only" id="pg-arsip">
+        <div class="tlb">
+          <div class="srw"><i data-lucide="search" class="sric"></i><input class="sri" placeholder="Cari arsip..." oninput="filterArsip()"></div>
+          <div class="filter-date">
+            <div class="f-d-item"><span>Dari</span><input type="date" id="f_a_start" onchange="filterArsip()" required></div>
+            <div class="f-d-item"><span>Sampai</span><input type="date" id="f_a_end" onchange="filterArsip()" required></div>
+          </div>
+          <select class="fc filter-select" id="f_a_kat" onchange="filterArsip()"><option value="">Semua Kategori</option></select>
+          <div class="tlb-btn-grp">
+            <button class="btn bg2" onclick="exportCSV('arsip')"><i data-lucide="download" class="lucide-sm"></i> CSV</button>
+            <button class="btn bg2" onclick="printRekap('arsip')" title="Cetak Rekap PDF"><i data-lucide="printer" class="lucide-sm"></i> Rekap</button>
+            <button class="btn bp2 btn-add admin-only" onclick="openModalArsip('add')"><i data-lucide="plus" class="lucide-sm"></i> Tambah</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="tw"><table>
+            <thead><tr><th>#</th><th>NO. SURAT</th><th>TANGGAL</th><th>KATEGORI</th><th>PERIHAL</th><th>FILE CLOUD</th><th style="text-align:right;">AKSI</th></tr></thead>
+            <tbody id="arsipTb"></tbody>
+          </table></div>
+          <div style="padding:20px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px; border-top:1px solid var(--gb);">
+            <div style="font-size:14px;color:var(--tm); font-weight:600;" id="arsipCt"></div><div class="pgi" id="arsipPg"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOG AKTIVITAS -->
+      <div class="pg admin-only" id="pg-log">
+        <div class="tlb">
+          <div class="srw"><i data-lucide="search" class="sric"></i><input class="sri" placeholder="Cari aktivitas atau user..." oninput="filterLog()"></div>
+          <div class="filter-date">
+            <div class="f-d-item"><span>Dari</span><input type="date" id="f_l_start" onchange="filterLog()"></div>
+            <div class="f-d-item"><span>Sampai</span><input type="date" id="f_l_end" onchange="filterLog()"></div>
+          </div>
+          <select class="fc filter-select" id="f_l_act" onchange="filterLog()">
+            <option value="">Semua Aksi</option><option value="CREATE">Tambah Data (CREATE)</option><option value="UPDATE">Edit Data (UPDATE)</option><option value="DELETE">Hapus Data (DELETE)</option><option value="LOGIN">Login / Akses (LOGIN)</option>
+          </select>
+          <div class="tlb-btn-grp"><button class="btn bg2" onclick="renderLog()" title="Refresh Data"><i data-lucide="refresh-cw" class="lucide-sm"></i> Refresh</button></div>
+        </div>
+        
+        <div class="card" style="padding: 24px; min-height: 400px;">
+          <div class="sh" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
+            <div class="st" style="font-size:16px;"><i data-lucide="activity" style="color:var(--a1)"></i> Rekam Jejak Sistem (Audit Trail)</div><div style="font-size:12px; color:var(--tm); font-weight:600;" id="logCt">Memuat...</div>
+          </div>
+          <div class="timeline-wrap" id="logTimelineBox">
+             <div style="text-align:center; padding: 40px; color:var(--tm); font-size:13.5px;"><i data-lucide="clock" style="display:block; margin:0 auto 12px auto; opacity:0.5; width:32px; height:32px;"></i> Belum ada aktivitas yang direkam.</div>
+          </div>
+          <div style="display:flex; justify-content:center; margin-top:20px;"><div class="pgi" id="logPg"></div></div>
+        </div>
+      </div>
+
+      <!-- PENGATURAN -->
+      <div class="pg admin-only" id="pg-pengaturan">
+        <div class="g2s">
+          <div style="display: flex; flex-direction: column; gap: 24px; min-width:0; overflow:hidden;">
+            <div class="card" style="margin: 0;"><div class="cb">
+              <div class="sh" style="margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
+                <div class="st"><i data-lucide="layers" style="color:var(--a1)"></i> Manajemen Bidang Surat</div>
+                <button class="btn-top-save btn-add" onclick="openModalBidang('add')" title="Tambah Bidang"><i data-lucide="plus"></i></button>
+              </div>
+              <div id="bidangListContainer" class="custom-scroll" style="display:flex; flex-direction:column; gap:6px; max-height:200px; overflow-y:auto; padding-right:6px;"></div>
+            </div></div>
+            <div class="card" style="margin: 0;"><div class="cb">
+              <div class="sh" style="margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
+                <div class="st"><i data-lucide="folder-tree" style="color:var(--a1)"></i> Kategori Arsip</div>
+                <button class="btn-top-save btn-add" onclick="openModalKategori('add')" title="Tambah Kategori Arsip"><i data-lucide="plus"></i></button>
+              </div>
+              <div id="kategoriListContainer" class="custom-scroll" style="display:flex; flex-direction:column; gap:6px; max-height:200px; overflow-y:auto; padding-right:6px;"></div>
+            </div></div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 24px; min-width:0; overflow:hidden;">
+            <div class="card" style="margin: 0;"><div class="cb">
+              <div class="sh" style="margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
+                <div class="st"><i data-lucide="user-cog" style="color:var(--a1)"></i> Manajemen Pejabat</div>
+                <button class="btn-top-save btn-add" onclick="openModalPejabat('add')" title="Tambah Pejabat"><i data-lucide="plus"></i></button>
+              </div>
+              <div id="pejabatListContainer" class="custom-scroll" style="display:flex; flex-direction:column; gap:6px; max-height:200px; overflow-y:auto; padding-right:6px;"></div>
+            </div></div>
+            <div class="card" style="margin: 0;"><div class="cb">
+              <div class="sh" style="margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
+                <div class="st"><i data-lucide="users" style="color:var(--a1)"></i> Manajemen Akun Sekolah</div>
+              </div>
+              <div style="font-size:12px; color:var(--ts); margin-bottom:16px;">Ganti kata sandi akses masing-masing admin sekolah.</div>
+              <div id="userListContainer" class="custom-scroll" style="display:flex; flex-direction:column; gap:6px; max-height:260px; overflow-y:auto; padding-right:6px;"></div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- === BOTTOM NAVIGATION === -->
+<div class="bottom-nav">
+  <div class="bn-item act" id="bnHome" data-page="dashboard" onclick="goToPage('dashboard')">
+    <img src="[https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/House/3D/house_3d.png](https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/House/3D/house_3d.png)" class="bn-ic-3d" alt="Home"><span>Home</span>
+  </div>
+  <div class="bn-item admin-only" data-page="disposisi" onclick="goToPage('disposisi')">
+    <div class="bn-ic-wrap"><img src="[https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Inbox%20tray/3D/inbox_tray_3d.png](https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Inbox%20tray/3D/inbox_tray_3d.png)" class="bn-ic-3d" alt="Inbox"><div class="bn-bd" id="bnBdgD" style="display:none;">0</div></div>
+    <span>Masuk</span>
+  </div>
+  <div class="bn-item admin-only" data-page="sk" onclick="goToPage('sk')">
+    <img src="[https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Outbox%20tray/3D/outbox_tray_3d.png](https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Outbox%20tray/3D/outbox_tray_3d.png)" class="bn-ic-3d" alt="Outbox"><span>Keluar</span>
+  </div>
+  <div class="bn-item" data-page="tembusan" onclick="goToPage('tembusan')">
+    <img src="[https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Clipboard/3D/clipboard_3d.png](https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Clipboard/3D/clipboard_3d.png)" class="bn-ic-3d" alt="Tembusan"><span>Tembusan</span>
+  </div>
+  <div class="bn-item admin-only" data-page="log" onclick="goToPage('log')">
+    <img src="[https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Scroll/3D/scroll_3d.png](https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Scroll/3D/scroll_3d.png)" class="bn-ic-3d" alt="Log"><span>Log</span>
+  </div>
+  <div class="bn-item admin-only" data-page="pengaturan" onclick="goToPage('pengaturan')">
+    <img src="[https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Gear/3D/gear_3d.png](https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Gear/3D/gear_3d.png)" class="bn-ic-3d" alt="Settings"><span>Setelan</span>
+  </div>
+</div>
+
+<!-- Menghubungkan file JavaScript -->
+<script src="script.js"></script>
+</body>
+</html>
